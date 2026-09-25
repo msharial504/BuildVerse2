@@ -3,330 +3,578 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BuildVerse 2</title>
+  <title>BuildVerse 2 - Roblox Style</title>
   <style>
-    :root{
-      --bg:#071421;
-      --panel:#121f33;
-      --panel2:#1a2a43;
-      --accent:#4ab3ff;
-      --accent2:#70f0bb;
-      --gold:#ffd166;
-      --danger:#ff5d73;
-      --text:#edf7ff;
-      --muted:#9db6d9;
-      --badge:#2d9cff;
-      --tile:#1a3559;
-      --shadow: rgba(0,0,0,0.35);
+    :root {
+      --primary: #00a2e8;
+      --dark: #1a1a1a;
+      --darker: #0d0d0d;
+      --accent: #00a2e8;
+      --gold: #ffd700;
+      --green: #3dd847;
+      --red: #ff6b6b;
+      --text: #ffffff;
+      --muted: #888888;
+      --verified: #00a2e8;
+      --panel: rgba(255,255,255,0.05);
+      --panel-border: rgba(0, 162, 232, 0.2);
     }
 
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
       height: 100%;
-      background: linear-gradient(180deg, #071421 0%, #0d1d2f 100%);
+      background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
       color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+
     body {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+    }
+
+    .top-nav {
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom: 2px solid var(--accent);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      padding: 16px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    #app {
-      width: min(1200px, 96vw);
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 18px;
-      background: rgba(9, 17, 28, 0.78);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 18px;
-      box-shadow: 0 20px 60px var(--shadow);
-      padding: 18px;
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 30px;
     }
 
-    .panel {
-      background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
-    .left h2 { margin: 0 0 12px; font-size: 26px; }
-    .brand { color: var(--accent); font-weight: 700; }
+    .nav-items {
+      display: flex;
+      gap: 20px;
+    }
 
-    .input-wrap { margin-bottom: 12px; }
-    input, select, button {
-      width: 100%;
+    .nav-item {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s;
       border: none;
-      border-radius: 10px;
-      padding: 11px 12px;
-      font-size: 15px;
-      outline: none;
-    }
-    input, select {
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: none;
+      font-size: 14px;
     }
 
-    .primary {
-      background: linear-gradient(180deg, var(--accent) 0%, #2d7fe9 100%);
-      color: white;
+    .nav-item:hover {
+      color: var(--accent);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .currency {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 14px;
+      border-radius: 8px;
       font-weight: 700;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-    .secondary {
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.08);
-      cursor: pointer;
-      width: auto;
-      min-width: 130px;
     }
 
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 16px;
+    .container {
+      display: flex;
+      flex: 1;
+      gap: 0;
     }
-    .stat {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 12px 10px;
-    }
-    .stat small { display: block; color: var(--muted); margin-bottom: 5px; }
-    .stat strong { font-size: 18px; }
 
-    .badge-box {
-      margin-top: 18px;
-      padding: 12px 14px;
+    .sidebar {
+      width: 350px;
+      background: rgba(0, 0, 0, 0.6);
+      border-right: 2px solid rgba(0, 162, 232, 0.2);
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
       border-radius: 12px;
-      background: rgba(74,179,255,0.12);
-      border: 1px solid rgba(74,179,255,0.28);
-      min-height: 72px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .profile-card {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #00a2e8, #0080b0);
+      border-radius: 8px;
+      margin: 0 auto 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 40px;
+      border: 3px solid var(--accent);
+    }
+
+    .player-name {
+      font-size: 20px;
+      font-weight: 900;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--verified);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
       font-weight: 700;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .role-badge {
+      display: inline-block;
+      background: rgba(0, 162, 232, 0.2);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .role-badge.owner {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--gold);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(0, 162, 232, 0.15);
+      border-radius: 8px;
+      padding: 12px;
       text-align: center;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--badge);
-      color: white;
-      padding: 7px 12px;
-      border-radius: 999px;
-      box-shadow: 0 6px 18px rgba(46,163,255,0.35);
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
     }
-    .badge::before { content: "✓"; margin-right: 7px; font-weight: 900; }
 
-    .shop { margin-top: 18px; }
-    .shop h3, .inventory h3 { margin: 0 0 10px; font-size: 18px; }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--accent);
+    }
 
-    .shop-list, .inventory-list { display: grid; gap: 8px; }
-    .shop-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
+    input, select {
+      width: 100%;
       padding: 10px 12px;
-    }
-    .shop-item span { font-weight: 700; }
-    .shop-item .cost { color: var(--gold); font-weight: 700; }
-    .shop-item button {
-      width: auto;
-      min-width: 82px;
       background: rgba(255,255,255,0.08);
-      color: var(--text);
-      cursor: pointer;
-      padding: 8px 10px;
+      border: 1px solid rgba(0, 162, 232, 0.2);
       border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 500;
     }
 
-    .item-pill {
-      display: inline-flex;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(112,240,187,.12);
-      border: 1px solid rgba(112,240,187,.22);
-      font-size: 13px;
-      color: #d9ffef;
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.12);
     }
 
-    .right { display: flex; flex-direction: column; gap: 14px; }
+    button {
+      width: 100%;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--accent), #0080b0);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+      margin-bottom: 10px;
+    }
 
-    .game-header {
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 162, 232, 0.4);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-small {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .shop-item {
+      background: rgba(0, 162, 232, 0.1);
+      border: 1px solid rgba(0, 162, 232, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
     }
-    .game-header .title { font-weight: 800; letter-spacing: 0.5px; }
-    .game-header .sub { color: var(--muted); font-size: 12px; }
+
+    .shop-item-name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .shop-item-price {
+      font-size: 12px;
+      color: var(--gold);
+    }
 
     canvas {
       width: 100%;
-      height: 560px;
-      display: block;
-      background: linear-gradient(180deg, rgba(17,31,48,1) 0%, rgba(20,34,54,1) 100%);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: inset 0 0 30px rgba(255,255,255,0.02);
+      height: 500px;
+      background: linear-gradient(180deg, #1a2a3a 0%, #0d1620 100%);
+      border-radius: 12px;
+      border: 2px solid rgba(0, 162, 232, 0.2);
+      margin: 20px;
+      margin-bottom: 16px;
     }
 
-    .touch-controls {
-      display: none;
+    .controls {
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 20px;
+    }
+
+    .control-btn {
+      padding: 12px !important;
+      margin: 0 !important;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .chat-box {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       margin-top: 10px;
     }
-    .touch-controls button {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text);
-      font-weight: 700;
-      min-height: 52px;
-      cursor: pointer;
-      touch-action: manipulation;
+
+    .chat-messages {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(0,162,232,0.18);
+      border-radius: 8px;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    @media (max-width: 850px) {
-      #app {
-        grid-template-columns: 1fr;
-      }
-      canvas {
-        height: 420px;
-      }
-      .touch-controls {
-        display: grid;
-      }
+    .message {
+      max-width: 85%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .message.self {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #00a2e8, #0080b0);
+      color: white;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      margin: 0;
+    }
+
+    .chat-input-row button {
+      flex: 0;
+      width: auto;
+      padding: 10px 12px;
+      margin: 0;
+      font-size: 12px;
+    }
+
+    .mic-btn {
+      width: 48px !important;
+      min-width: 48px;
+      padding: 10px !important;
+      font-size: 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(0,162,232,0.2);
+    }
+
+    .mic-btn.recording {
+      background: #ff4d4d;
+      border-color: #ff4d4d;
+      animation: pulse 1s infinite;
+    }
+
+    .game-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      animation: slideUp 0.3s ease, slideDown 0.3s ease 2.7s forwards;
+      z-index: 2000;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(100px); opacity: 0; }
+    }
+
+    @media (max-width: 1024px) {
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; border-right: none; border-bottom: 2px solid rgba(0, 162, 232, 0.2); }
     }
   </style>
 </head>
 <body>
-  <div id="app">
-    <aside class="panel left">
-      <h2><span class="brand">BuildVerse 2</span></h2>
+  <div class="top-nav">
+    <div class="nav-left">
+      <div class="logo">BuildVerse 2</div>
+      <div class="nav-items">
+        <button class="nav-item" onclick="showSection('play')">Play</button>
+        <button class="nav-item" onclick="showSection('shop')">Shop</button>
+        <button class="nav-item" onclick="showSection('profile')">Profile</button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="currency"><span>💰 </span><span id="robuxDisplay">500</span></div>
+      <div class="currency"><span>⭐ </span><span id="coinsDisplay">0</span></div>
+    </div>
+  </div>
 
-      <div class="input-wrap">
-        <input id="playerName" type="text" value="PlayerOne" placeholder="Player name" />
+  <div class="container">
+    <div class="sidebar">
+      <div class="profile-card card">
+        <div class="avatar">👤</div>
+        <div class="player-name">
+          <span id="playerNameDisplay">PlayerOne</span>
+          <span class="verified-badge" id="verificationBadge" style="display:none;">✓</span>
+        </div>
+        <div id="roleDisplay"></div>
       </div>
 
-      <div class="input-wrap">
+      <div class="card">
+        <h3>Stats</h3>
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-label">Level</div><div class="stat-value" id="levelDisplay">1</div></div>
+          <div class="stat-box"><div class="stat-label">Coins</div><div class="stat-value" id="statsCoinsDisplay">0</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Profile</h3>
+        <input type="text" id="playerName" placeholder="Username" />
         <select id="roleSelect">
           <option value="player">Player</option>
           <option value="creator">Game Creator</option>
           <option value="developer">Developer</option>
-          <option value="content_creator">Content Creator</option>
+          <option value="owner">Owner</option>
         </select>
+        <button onclick="saveProfile()">Save Profile</button>
+        <button class="btn-secondary" onclick="verifyAccount()">Verify Account</button>
       </div>
 
-      <button id="saveProfile" class="primary">Save profile</button>
-
-      <div class="stats">
-        <div class="stat">
-          <small>Coins</small>
-          <strong id="coinsDisplay">0</strong>
+      <div class="card">
+        <h3>Chat</h3>
+        <div class="chat-box">
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Type a message..." />
+            <button class="btn-small" onclick="sendChat()">Send</button>
+            <button class="btn-small mic-btn" id="micBtn" type="button" title="Speak">🎙️</button>
+          </div>
         </div>
-        <div class="stat">
-          <small>Level</small>
-          <strong id="levelDisplay">1</strong>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div id="playSection" class="game-section">
+        <div style="padding: 20px; margin-top: 0;">
+          <h2 style="margin: 0 0 10px 0; color: var(--accent);">BuildVerse Studio</h2>
+          <p style="margin: 0; color: var(--muted);">Collect coins, build, and earn rewards!</p>
+        </div>
+        <canvas id="gameCanvas" width="840" height="500"></canvas>
+        <div class="controls">
+          <div></div>
+          <button class="control-btn" data-move="up">↑</button>
+          <div></div>
+          <button class="control-btn" data-move="left">←</button>
+          <button class="control-btn" data-move="down">↓</button>
+          <button class="control-btn" data-move="right">→</button>
         </div>
       </div>
 
-      <div class="badge-box">
-        <div id="badgeDisplay">No badge</div>
-      </div>
-
-      <div class="shop">
-        <h3>Shop</h3>
-        <div id="shopList" class="shop-list"></div>
-      </div>
-
-      <div class="inventory">
-        <h3>Inventory</h3>
-        <div id="inventoryList" class="inventory-list"></div>
-      </div>
-    </aside>
-
-    <main class="right">
-      <div class="game-header panel">
-        <div>
-          <div class="title">BuildVerse 2</div>
-          <div class="sub">Move • collect coins • buy items • earn badge</div>
+      <div id="shopSection" class="game-section" style="display:none; padding: 20px; overflow-y: auto;">
+        <h2 style="margin: 0 0 20px 0; color: var(--accent);">ROBUX SHOP</h2>
+        <div class="card">
+          <h3>Buy Robux</h3>
+          <div id="robuxPackages"></div>
         </div>
-        <button id="verifyBtn" class="secondary">Verify account</button>
+        <div class="card">
+          <h3>Game Items</h3>
+          <div id="itemShopList"></div>
+        </div>
       </div>
 
-      <canvas id="gameCanvas" width="840" height="560"></canvas>
-
-      <div class="touch-controls">
-        <div></div>
-        <button data-move="up">↑</button>
-        <div></div>
-        <button data-move="left">←</button>
-        <button data-move="down">↓</button>
-        <button data-move="right">→</button>
+      <div id="profileSection" class="game-section" style="display:none; padding: 20px; overflow-y: auto;">
+        <h2 style="margin: 0 0 20px 0; color: var(--accent);">MY PROFILE</h2>
+        <div class="card">
+          <h3>Account Info</h3>
+          <p><strong>Username:</strong> <span id="profileUsername">PlayerOne</span></p>
+          <p><strong>Role:</strong> <span id="profileRole">Player</span></p>
+          <p><strong>Verified:</strong> <span id="profileVerified">❌ No</span></p>
+          <p><strong>Robux:</strong> <span id="profileRobux">500</span></p>
+          <p><strong>Coins:</strong> <span id="profileCoins">0</span></p>
+        </div>
       </div>
-    </main>
+    </div>
   </div>
 
   <script>
+    const STORAGE_KEY = 'buildverse2-roblox';
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const ui = {
-      playerName: document.getElementById('playerName'),
-      roleSelect: document.getElementById('roleSelect'),
-      coins: document.getElementById('coinsDisplay'),
-      level: document.getElementById('levelDisplay'),
-      badge: document.getElementById('badgeDisplay'),
-      shopList: document.getElementById('shopList'),
-      inventoryList: document.getElementById('inventoryList'),
-      saveProfile: document.getElementById('saveProfile'),
-      verifyBtn: document.getElementById('verifyBtn')
-    };
-
-    const state = {
-      name: 'PlayerOne',
+    let gameState = {
+      playerName: 'PlayerOne',
       role: 'player',
       verified: false,
-      coins: 80,
+      robux: 500,
+      coins: 0,
       level: 1,
-      inventory: [],
-      shop: [
-        { id: 'hat', name: 'Blue Hat', cost: 25, color: '#4ab3ff' },
-        { id: 'tool', name: 'Builder Tool', cost: 35, color: '#50e3a4' },
-        { id: 'suit', name: 'Creator Suit', cost: 45, color: '#ffd166' }
-      ]
+      inventory: []
     };
 
-    const player = {
-      x: 60,
-      y: 60,
-      w: 20,
-      h: 20,
-      speed: 2.8,
-      color: '#7ad6ff'
-    };
+    const shopItems = [
+      { id: 'hat-blue', name: 'Blue Cap', cost: 50, icon: '🧢' },
+      { id: 'hat-gold', name: 'Gold Crown', cost: 150, icon: '👑' },
+      { id: 'sword', name: 'Diamond Sword', cost: 200, icon: '⚔️' },
+      { id: 'staff', name: 'Magic Staff', cost: 300, icon: '🪄' }
+    ];
 
+    const robuxPackages = [
+      { amount: 400, price: '$4.99' },
+      { amount: 800, price: '$9.99' },
+      { amount: 1700, price: '$19.99' }
+    ];
+
+    const chatReplies = [
+      'Nice! Keep collecting coins.',
+      'Great job! BuildVerse is fun.',
+      'You are doing amazing!',
+      'The shop is open, check it out.',
+      'Creator mode unlocked! Nice work.'
+    ];
+
+    const player = { x: 60, y: 60, w: 20, h: 20, speed: 120, color: '#00a2e8' };
     const walls = [
       { x: 120, y: 80, w: 180, h: 20 },
       { x: 440, y: 90, w: 220, h: 18 },
@@ -334,72 +582,56 @@
       { x: 520, y: 240, w: 180, h: 18 },
       { x: 150, y: 360, w: 230, h: 18 },
       { x: 610, y: 360, w: 150, h: 18 },
-      { x: 360, y: 470, w: 170, h: 18 }
+      { x: 360, y: 420, w: 170, h: 18 }
     ];
 
-    let coins = [
+    let coinDrops = [
       { x: 80, y: 150, r: 8, value: 10 },
       { x: 330, y: 180, r: 8, value: 10 },
       { x: 710, y: 150, r: 8, value: 10 },
-      { x: 700, y: 420, r: 8, value: 10 },
-      { x: 200, y: 460, r: 8, value: 10 },
+      { x: 700, y: 380, r: 8, value: 10 },
+      { x: 200, y: 420, r: 8, value: 10 },
       { x: 470, y: 300, r: 8, value: 10 }
     ];
 
     const keys = {};
     const touchMoves = { up: false, down: false, left: false, right: false };
+    let lastTime = 0;
 
-    function clamp(n, min, max) {
-      return Math.min(Math.max(n, min), max);
-    }
-
+    function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
     function intersects(a, b) {
-      return a.x < b.x + b.w &&
-             a.x + a.w > b.x &&
-             a.y < b.y + b.h &&
-             a.y + a.h > b.y;
-    }
-
-    function drawRect(rect, color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
     }
 
     function drawCoin(coin) {
       ctx.beginPath();
-      ctx.fillStyle = '#ffd166';
+      ctx.fillStyle = '#ffd700';
       ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI * 2);
       ctx.fill();
-      ctx.closePath();
+      ctx.strokeStyle = '#ffb800';
+      ctx.lineWidth = 2;
+      ctx.stroke();
     }
 
     function drawPlayer() {
       ctx.fillStyle = player.color;
       ctx.fillRect(player.x, player.y, player.w, player.h);
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
       ctx.fillRect(player.x + 4, player.y + 4, player.w - 8, 6);
-      ctx.fillStyle = '#dfeaff';
-      ctx.fillRect(player.x + 6, player.y + 12, player.w - 12, player.h - 10);
     }
 
-    function movePlayer() {
-      let moveX = 0;
-      let moveY = 0;
+    function movePlayer(deltaTime) {
+      let moveX = 0, moveY = 0;
+      if (keys['w'] || keys['ArrowUp'] || touchMoves.up) moveY -= player.speed * deltaTime;
+      if (keys['s'] || keys['ArrowDown'] || touchMoves.down) moveY += player.speed * deltaTime;
+      if (keys['a'] || keys['ArrowLeft'] || touchMoves.left) moveX -= player.speed * deltaTime;
+      if (keys['d'] || keys['ArrowRight'] || touchMoves.right) moveX += player.speed * deltaTime;
 
-      if (keys['w'] || keys['ArrowUp'] || touchMoves.up) moveY -= player.speed;
-      if (keys['s'] || keys['ArrowDown'] || touchMoves.down) moveY += player.speed;
-      if (keys['a'] || keys['ArrowLeft'] || touchMoves.left) moveX -= player.speed;
-      if (keys['d'] || keys['ArrowRight'] || touchMoves.right) moveX += player.speed;
-
-      const nextX = player.x + moveX;
-      const nextY = player.y + moveY;
-
+      const nextX = player.x + moveX, nextY = player.y + moveY;
       const testX = { x: nextX, y: player.y, w: player.w, h: player.h };
       const testY = { x: player.x, y: nextY, w: player.w, h: player.h };
 
-      let canMoveX = true;
-      let canMoveY = true;
-
+      let canMoveX = true, canMoveY = true;
       for (const wall of walls) {
         if (intersects(testX, wall)) canMoveX = false;
         if (intersects(testY, wall)) canMoveY = false;
@@ -408,170 +640,263 @@
       if (canMoveX) player.x = clamp(nextX, 0, canvas.width - player.w);
       if (canMoveY) player.y = clamp(nextY, 0, canvas.height - player.h);
 
-      for (let i = coins.length - 1; i >= 0; i--) {
-        const c = coins[i];
+      for (let i = coinDrops.length - 1; i >= 0; i--) {
+        const c = coinDrops[i];
         const dx = player.x + player.w / 2 - c.x;
         const dy = player.y + player.h / 2 - c.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < (player.w / 2 + c.r)) {
-          state.coins += c.value;
-          coins.splice(i, 1);
+        if (Math.sqrt(dx * dx + dy * dy) < player.w / 2 + c.r) {
+          gameState.coins += c.value;
+          coinDrops.splice(i, 1);
+          updateLevel();
           updateUI();
+          saveState();
         }
       }
-
-      if (state.coins >= 60) state.level = 2;
-      if (state.coins >= 140) state.level = 3;
-      ui.level.textContent = state.level;
     }
 
-    function getBadgeText() {
-      if (!state.verified) return '';
-      if (state.role === 'creator') return 'Game Creator';
-      if (state.role === 'developer') return 'Developer';
-      if (state.role === 'content_creator') return 'Content Creator';
-      return 'Verified';
+    function updateLevel() {
+      if (gameState.coins >= 500) gameState.level = 5;
+      else if (gameState.coins >= 300) gameState.level = 4;
+      else if (gameState.coins >= 150) gameState.level = 3;
+      else if (gameState.coins >= 60) gameState.level = 2;
     }
 
-    function updateUI() {
-      ui.playerName.value = state.name;
-      ui.roleSelect.value = state.role;
-      ui.coins.textContent = state.coins;
-      ui.level.textContent = state.level;
-
-      const badgeText = getBadgeText();
-      ui.badge.innerHTML = badgeText ? `<span class="badge">${badgeText}</span>` : 'No badge';
-
-      renderShop();
-      renderInventory();
-    }
-
-    function renderShop() {
-      ui.shopList.innerHTML = '';
-      state.shop.forEach(item => {
-        const row = document.createElement('div');
-        row.className = 'shop-item';
-
-        const left = document.createElement('div');
-        left.innerHTML = `<span>${item.name}</span>`;
-
-        const cost = document.createElement('span');
-        cost.className = 'cost';
-        cost.textContent = `${item.cost} Coins`;
-
-        const btn = document.createElement('button');
-        btn.textContent = 'Buy';
-        btn.onclick = () => buyItem(item);
-
-        row.appendChild(left);
-        row.appendChild(cost);
-        row.appendChild(btn);
-        ui.shopList.appendChild(row);
-      });
-    }
-
-    function renderInventory() {
-      ui.inventoryList.innerHTML = '';
-      if (!state.inventory.length) {
-        const empty = document.createElement('div');
-        empty.className = 'item-pill';
-        empty.textContent = 'Empty';
-        ui.inventoryList.appendChild(empty);
-        return;
-      }
-
-      state.inventory.forEach(item => {
-        const pill = document.createElement('div');
-        pill.className = 'item-pill';
-        pill.textContent = item;
-        ui.inventoryList.appendChild(pill);
-      });
-    }
-
-    function buyItem(item) {
-      if (state.coins < item.cost) {
-        alert('Not enough Coins');
-        return;
-      }
-      state.coins -= item.cost;
-      state.inventory.push(item.name);
-      updateUI();
-    }
-
-    function saveProfile() {
-      state.name = ui.playerName.value.trim() || 'PlayerOne';
-      state.role = ui.roleSelect.value;
-      updateUI();
-    }
-
-    function verifyAccount() {
-      const allowed = ['creator', 'developer', 'content_creator'];
-      if (!allowed.includes(state.role)) {
-        alert('Only Creator, Developer, or Content Creator can be verified.');
-        return;
-      }
-      state.verified = true;
-      updateUI();
-    }
-
-    function renderBackground() {
+    function renderGame() {
       ctx.fillStyle = '#0f1a2d';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       for (let x = 0; x < canvas.width; x += 40) {
         for (let y = 0; y < canvas.height; y += 40) {
-          ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          ctx.strokeStyle = 'rgba(0,162,232,0.1)';
           ctx.strokeRect(x, y, 40, 40);
         }
       }
-    }
-
-    function renderWalls() {
       for (const wall of walls) {
-        drawRect(wall, '#3a5c7d');
+        ctx.fillStyle = '#1a5a8f';
+        ctx.fillRect(wall.x, wall.y, wall.w, wall.h);
       }
-    }
-
-    function renderMap() {
-      renderBackground();
-      renderWalls();
-      for (const c of coins) drawCoin(c);
+      for (const c of coinDrops) drawCoin(c);
       drawPlayer();
     }
 
-    function gameLoop() {
-      movePlayer();
-      renderMap();
+    function gameLoop(timestamp) {
+      if (lastTime === 0) lastTime = timestamp;
+      const deltaTime = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+      movePlayer(deltaTime);
+      renderGame();
       requestAnimationFrame(gameLoop);
     }
 
-    document.addEventListener('keydown', (e) => {
-      keys[e.key] = true;
+    function updateUI() {
+      document.getElementById('playerNameDisplay').textContent = gameState.playerName;
+      document.getElementById('robuxDisplay').textContent = gameState.robux;
+      document.getElementById('coinsDisplay').textContent = gameState.coins;
+      document.getElementById('statsCoinsDisplay').textContent = gameState.coins;
+      document.getElementById('levelDisplay').textContent = gameState.level;
+
+      const badge = document.getElementById('verificationBadge');
+      badge.style.display = gameState.verified ? 'inline-flex' : 'none';
+
+      const roleDisplay = document.getElementById('roleDisplay');
+      const roleClass = gameState.role === 'owner' ? 'owner' : '';
+      roleDisplay.innerHTML = `<div class="role-badge ${roleClass}">${gameState.role.toUpperCase()}</div>`;
+
+      document.getElementById('profileUsername').textContent = gameState.playerName;
+      document.getElementById('profileRole').textContent = gameState.role;
+      document.getElementById('profileVerified').textContent = gameState.verified ? '✅ Yes' : '❌ No';
+      document.getElementById('profileRobux').textContent = gameState.robux;
+      document.getElementById('profileCoins').textContent = gameState.coins;
+
+      renderShop();
+    }
+
+    function renderShop() {
+      const list = document.getElementById('itemShopList');
+      list.innerHTML = '';
+      shopItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'shop-item';
+        const owned = gameState.inventory.includes(item.id);
+        div.innerHTML = `
+          <div>
+            <div class="shop-item-name">${item.icon} ${item.name}</div>
+            <div class="shop-item-price">R$ ${item.cost}</div>
+          </div>
+          <button class="btn-small" onclick="buyItem('${item.id}', ${item.cost})" ${owned ? 'disabled' : ''}>${owned ? 'Owned' : 'Buy'}</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function renderRobuxPackages() {
+      const div = document.getElementById('robuxPackages');
+      div.innerHTML = '';
+      robuxPackages.forEach(pkg => {
+        const btn = document.createElement('button');
+        btn.innerHTML = `R$ ${pkg.amount.toLocaleString()} - ${pkg.price}`;
+        btn.onclick = () => {
+          gameState.robux += pkg.amount;
+          saveState();
+          updateUI();
+          showNotification(`Purchased R$ ${pkg.amount.toLocaleString()}!`);
+        };
+        div.appendChild(btn);
+      });
+    }
+
+    function buyItem(itemId, cost) {
+      if (gameState.inventory.includes(itemId)) {
+        showNotification('Already owned');
+        return;
+      }
+      if (gameState.robux < cost) {
+        showNotification('Not enough Robux');
+        return;
+      }
+      gameState.robux -= cost;
+      gameState.inventory.push(itemId);
+      saveState();
+      updateUI();
+      showNotification('Item purchased!');
+    }
+
+    function saveProfile() {
+      gameState.playerName = document.getElementById('playerName').value || 'PlayerOne';
+      gameState.role = document.getElementById('roleSelect').value;
+      saveState();
+      updateUI();
+      showNotification('Profile saved!');
+    }
+
+    function verifyAccount() {
+      if (!['creator', 'developer', 'owner'].includes(gameState.role)) {
+        showNotification('Only Creator, Developer, or Owner can verify');
+        return;
+      }
+      gameState.verified = true;
+      saveState();
+      updateUI();
+      showNotification('✅ Account verified!');
+    }
+
+    function showSection(section) {
+      document.getElementById('playSection').style.display = section === 'play' ? 'flex' : 'none';
+      document.getElementById('shopSection').style.display = section === 'shop' ? 'flex' : 'none';
+      document.getElementById('profileSection').style.display = section === 'profile' ? 'flex' : 'none';
+    }
+
+    function showNotification(msg) {
+      const notif = document.createElement('div');
+      notif.className = 'notification';
+      notif.textContent = msg;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          gameState = Object.assign(gameState, JSON.parse(saved));
+        } catch (err) {
+          console.warn('Load error', err);
+        }
+      }
+    }
+
+    // ===== CHAT & MIC =====
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const micBtn = document.getElementById('micBtn');
+
+    function addChatMessage(text, sender = 'bot') {
+      const msg = document.createElement('div');
+      msg.className = `message ${sender === 'self' ? 'self' : 'bot'}`;
+      msg.textContent = text;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function sendChat() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addChatMessage(text, 'self');
+      chatInput.value = '';
+      setTimeout(() => {
+        const reply = chatReplies[Math.floor(Math.random() * chatReplies.length)];
+        addChatMessage(reply, 'bot');
+      }, 400);
+    }
+
+    document.getElementById('chatInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendChat();
     });
-    document.addEventListener('keyup', (e) => {
-      keys[e.key] = false;
+
+    // MIC INPUT
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let micListening = false;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        micListening = true;
+        micBtn.classList.add('recording');
+        micBtn.textContent = '🔴';
+      };
+
+      recognition.onend = () => {
+        micListening = false;
+        micBtn.classList.remove('recording');
+        micBtn.textContent = '🎙️';
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        addChatMessage(transcript, 'self');
+        setTimeout(() => {
+          const reply = chatReplies[Math.floor(Math.random() * chatReplies.length)];
+          addChatMessage(reply, 'bot');
+        }, 300);
+      };
+    }
+
+    micBtn.addEventListener('click', () => {
+      if (!recognition) {
+        showNotification('Microphone not supported');
+        return;
+      }
+      micListening ? recognition.stop() : recognition.start();
     });
+
+    // INIT
+    document.addEventListener('keydown', (e) => { keys[e.key] = true; });
+    document.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
     document.querySelectorAll('[data-move]').forEach(btn => {
-      const direction = btn.dataset.move;
-      const press = (value) => {
-        return (event) => {
-          touchMoves[direction] = value;
-          event.preventDefault();
-        };
-      };
-      btn.addEventListener('touchstart', press(true));
-      btn.addEventListener('touchend', press(false));
-      btn.addEventListener('mousedown', press(true));
-      btn.addEventListener('mouseup', press(false));
-      btn.addEventListener('mouseleave', press(false));
+      const dir = btn.dataset.move;
+      btn.addEventListener('touchstart', (e) => { touchMoves[dir] = true; e.preventDefault(); });
+      btn.addEventListener('touchend', (e) => { touchMoves[dir] = false; e.preventDefault(); });
+      btn.addEventListener('mousedown', () => { touchMoves[dir] = true; });
+      btn.addEventListener('mouseup', () => { touchMoves[dir] = false; });
+      btn.addEventListener('mouseleave', () => { touchMoves[dir] = false; });
     });
 
-    ui.saveProfile.addEventListener('click', saveProfile);
-    ui.verifyBtn.addEventListener('click', verifyAccount);
+    addChatMessage('Welcome to BuildVerse 2! 🎮', 'bot');
+    addChatMessage('Collect coins, build, and chat!', 'bot');
 
+    loadState();
+    document.getElementById('playerName').value = gameState.playerName;
+    document.getElementById('roleSelect').value = gameState.role;
     updateUI();
+    renderRobuxPackages();
     requestAnimationFrame(gameLoop);
   </script>
 </body>
