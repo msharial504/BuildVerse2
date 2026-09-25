@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuildVerse 2</title>
+  <style>
+    :root{
+      --bg:#071421;
+      --panel:#121f33;
+      --panel2:#1a2a43;
+      --accent:#4ab3ff;
+      --accent2:#70f0bb;
+      --gold:#ffd166;
+      --danger:#ff5d73;
+      --text:#edf7ff;
+      --muted:#9db6d9;
+      --badge:#2d9cff;
+      --tile:#1a3559;
+      --shadow: rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: linear-gradient(180deg, #071421 0%, #0d1d2f 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    #app {
+      width: min(1200px, 96vw);
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      background: rgba(9, 17, 28, 0.78);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px var(--shadow);
+      padding: 18px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .left h2 { margin: 0 0 12px; font-size: 26px; }
+    .brand { color: var(--accent); font-weight: 700; }
+
+    .input-wrap { margin-bottom: 12px; }
+    input, select, button {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 12px;
+      font-size: 15px;
+      outline: none;
+    }
+    input, select {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .primary {
+      background: linear-gradient(180deg, var(--accent) 0%, #2d7fe9 100%);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      width: auto;
+      min-width: 130px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 12px 10px;
+    }
+    .stat small { display: block; color: var(--muted); margin-bottom: 5px; }
+    .stat strong { font-size: 18px; }
+
+    .badge-box {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(74,179,255,0.12);
+      border: 1px solid rgba(74,179,255,0.28);
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--badge);
+      color: white;
+      padding: 7px 12px;
+      border-radius: 999px;
+      box-shadow: 0 6px 18px rgba(46,163,255,0.35);
+    }
+    .badge::before { content: "✓"; margin-right: 7px; font-weight: 900; }
+
+    .shop { margin-top: 18px; }
+    .shop h3, .inventory h3 { margin: 0 0 10px; font-size: 18px; }
+
+    .shop-list, .inventory-list { display: grid; gap: 8px; }
+    .shop-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .shop-item span { font-weight: 700; }
+    .shop-item .cost { color: var(--gold); font-weight: 700; }
+    .shop-item button {
+      width: auto;
+      min-width: 82px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      cursor: pointer;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+
+    .item-pill {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(112,240,187,.12);
+      border: 1px solid rgba(112,240,187,.22);
+      font-size: 13px;
+      color: #d9ffef;
+    }
+
+    .right { display: flex; flex-direction: column; gap: 14px; }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .game-header .title { font-weight: 800; letter-spacing: 0.5px; }
+    .game-header .sub { color: var(--muted); font-size: 12px; }
+
+    canvas {
+      width: 100%;
+      height: 560px;
+      display: block;
+      background: linear-gradient(180deg, rgba(17,31,48,1) 0%, rgba(20,34,54,1) 100%);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 30px rgba(255,255,255,0.02);
+    }
+
+    .touch-controls {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .touch-controls button {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      font-weight: 700;
+      min-height: 52px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    @media (max-width: 850px) {
+      #app {
+        grid-template-columns: 1fr;
+      }
+      canvas {
+        height: 420px;
+      }
+      .touch-controls {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <aside class="panel left">
+      <h2><span class="brand">BuildVerse 2</span></h2>
+
+      <div class="input-wrap">
+        <input id="playerName" type="text" value="PlayerOne" placeholder="Player name" />
+      </div>
+
+      <div class="input-wrap">
+        <select id="roleSelect">
+          <option value="player">Player</option>
+          <option value="creator">Game Creator</option>
+          <option value="developer">Developer</option>
+          <option value="content_creator">Content Creator</option>
+        </select>
+      </div>
+
+      <button id="saveProfile" class="primary">Save profile</button>
+
+      <div class="stats">
+        <div class="stat">
+          <small>Coins</small>
+          <strong id="coinsDisplay">0</strong>
+        </div>
+        <div class="stat">
+          <small>Level</small>
+          <strong id="levelDisplay">1</strong>
+        </div>
+      </div>
+
+      <div class="badge-box">
+        <div id="badgeDisplay">No badge</div>
+      </div>
+
+      <div class="shop">
+        <h3>Shop</h3>
+        <div id="shopList" class="shop-list"></div>
+      </div>
+
+      <div class="inventory">
+        <h3>Inventory</h3>
+        <div id="inventoryList" class="inventory-list"></div>
+      </div>
+    </aside>
+
+    <main class="right">
+      <div class="game-header panel">
+        <div>
+          <div class="title">BuildVerse 2</div>
+          <div class="sub">Move • collect coins • buy items • earn badge</div>
+        </div>
+        <button id="verifyBtn" class="secondary">Verify account</button>
+      </div>
+
+      <canvas id="gameCanvas" width="840" height="560"></canvas>
+
+      <div class="touch-controls">
+        <div></div>
+        <button data-move="up">↑</button>
+        <div></div>
+        <button data-move="left">←</button>
+        <button data-move="down">↓</button>
+        <button data-move="right">→</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const ui = {
+      playerName: document.getElementById('playerName'),
+      roleSelect: document.getElementById('roleSelect'),
+      coins: document.getElementById('coinsDisplay'),
+      level: document.getElementById('levelDisplay'),
+      badge: document.getElementById('badgeDisplay'),
+      shopList: document.getElementById('shopList'),
+      inventoryList: document.getElementById('inventoryList'),
+      saveProfile: document.getElementById('saveProfile'),
+      verifyBtn: document.getElementById('verifyBtn')
+    };
+
+    const state = {
+      name: 'PlayerOne',
+      role: 'player',
+      verified: false,
+      coins: 80,
+      level: 1,
+      inventory: [],
+      shop: [
+        { id: 'hat', name: 'Blue Hat', cost: 25, color: '#4ab3ff' },
+        { id: 'tool', name: 'Builder Tool', cost: 35, color: '#50e3a4' },
+        { id: 'suit', name: 'Creator Suit', cost: 45, color: '#ffd166' }
+      ]
+    };
+
+    const player = {
+      x: 60,
+      y: 60,
+      w: 20,
+      h: 20,
+      speed: 2.8,
+      color: '#7ad6ff'
+    };
+
+    const walls = [
+      { x: 120, y: 80, w: 180, h: 20 },
+      { x: 440, y: 90, w: 220, h: 18 },
+      { x: 260, y: 220, w: 18, h: 170 },
+      { x: 520, y: 240, w: 180, h: 18 },
+      { x: 150, y: 360, w: 230, h: 18 },
+      { x: 610, y: 360, w: 150, h: 18 },
+      { x: 360, y: 470, w: 170, h: 18 }
+    ];
+
+    let coins = [
+      { x: 80, y: 150, r: 8, value: 10 },
+      { x: 330, y: 180, r: 8, value: 10 },
+      { x: 710, y: 150, r: 8, value: 10 },
+      { x: 700, y: 420, r: 8, value: 10 },
+      { x: 200, y: 460, r: 8, value: 10 },
+      { x: 470, y: 300, r: 8, value: 10 }
+    ];
+
+    const keys = {};
+    const touchMoves = { up: false, down: false, left: false, right: false };
+
+    function clamp(n, min, max) {
+      return Math.min(Math.max(n, min), max);
+    }
+
+    function intersects(a, b) {
+      return a.x < b.x + b.w &&
+             a.x + a.w > b.x &&
+             a.y < b.y + b.h &&
+             a.y + a.h > b.y;
+    }
+
+    function drawRect(rect, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+    }
+
+    function drawCoin(coin) {
+      ctx.beginPath();
+      ctx.fillStyle = '#ffd166';
+      ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function drawPlayer() {
+      ctx.fillStyle = player.color;
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillRect(player.x + 4, player.y + 4, player.w - 8, 6);
+      ctx.fillStyle = '#dfeaff';
+      ctx.fillRect(player.x + 6, player.y + 12, player.w - 12, player.h - 10);
+    }
+
+    function movePlayer() {
+      let moveX = 0;
+      let moveY = 0;
+
+      if (keys['w'] || keys['ArrowUp'] || touchMoves.up) moveY -= player.speed;
+      if (keys['s'] || keys['ArrowDown'] || touchMoves.down) moveY += player.speed;
+      if (keys['a'] || keys['ArrowLeft'] || touchMoves.left) moveX -= player.speed;
+      if (keys['d'] || keys['ArrowRight'] || touchMoves.right) moveX += player.speed;
+
+      const nextX = player.x + moveX;
+      const nextY = player.y + moveY;
+
+      const testX = { x: nextX, y: player.y, w: player.w, h: player.h };
+      const testY = { x: player.x, y: nextY, w: player.w, h: player.h };
+
+      let canMoveX = true;
+      let canMoveY = true;
+
+      for (const wall of walls) {
+        if (intersects(testX, wall)) canMoveX = false;
+        if (intersects(testY, wall)) canMoveY = false;
+      }
+
+      if (canMoveX) player.x = clamp(nextX, 0, canvas.width - player.w);
+      if (canMoveY) player.y = clamp(nextY, 0, canvas.height - player.h);
+
+      for (let i = coins.length - 1; i >= 0; i--) {
+        const c = coins[i];
+        const dx = player.x + player.w / 2 - c.x;
+        const dy = player.y + player.h / 2 - c.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < (player.w / 2 + c.r)) {
+          state.coins += c.value;
+          coins.splice(i, 1);
+          updateUI();
+        }
+      }
+
+      if (state.coins >= 60) state.level = 2;
+      if (state.coins >= 140) state.level = 3;
+      ui.level.textContent = state.level;
+    }
+
+    function getBadgeText() {
+      if (!state.verified) return '';
+      if (state.role === 'creator') return 'Game Creator';
+      if (state.role === 'developer') return 'Developer';
+      if (state.role === 'content_creator') return 'Content Creator';
+      return 'Verified';
+    }
+
+    function updateUI() {
+      ui.playerName.value = state.name;
+      ui.roleSelect.value = state.role;
+      ui.coins.textContent = state.coins;
+      ui.level.textContent = state.level;
+
+      const badgeText = getBadgeText();
+      ui.badge.innerHTML = badgeText ? `<span class="badge">${badgeText}</span>` : 'No badge';
+
+      renderShop();
+      renderInventory();
+    }
+
+    function renderShop() {
+      ui.shopList.innerHTML = '';
+      state.shop.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'shop-item';
+
+        const left = document.createElement('div');
+        left.innerHTML = `<span>${item.name}</span>`;
+
+        const cost = document.createElement('span');
+        cost.className = 'cost';
+        cost.textContent = `${item.cost} Coins`;
+
+        const btn = document.createElement('button');
+        btn.textContent = 'Buy';
+        btn.onclick = () => buyItem(item);
+
+        row.appendChild(left);
+        row.appendChild(cost);
+        row.appendChild(btn);
+        ui.shopList.appendChild(row);
+      });
+    }
+
+    function renderInventory() {
+      ui.inventoryList.innerHTML = '';
+      if (!state.inventory.length) {
+        const empty = document.createElement('div');
+        empty.className = 'item-pill';
+        empty.textContent = 'Empty';
+        ui.inventoryList.appendChild(empty);
+        return;
+      }
+
+      state.inventory.forEach(item => {
+        const pill = document.createElement('div');
+        pill.className = 'item-pill';
+        pill.textContent = item;
+        ui.inventoryList.appendChild(pill);
+      });
+    }
+
+    function buyItem(item) {
+      if (state.coins < item.cost) {
+        alert('Not enough Coins');
+        return;
+      }
+      state.coins -= item.cost;
+      state.inventory.push(item.name);
+      updateUI();
+    }
+
+    function saveProfile() {
+      state.name = ui.playerName.value.trim() || 'PlayerOne';
+      state.role = ui.roleSelect.value;
+      updateUI();
+    }
+
+    function verifyAccount() {
+      const allowed = ['creator', 'developer', 'content_creator'];
+      if (!allowed.includes(state.role)) {
+        alert('Only Creator, Developer, or Content Creator can be verified.');
+        return;
+      }
+      state.verified = true;
+      updateUI();
+    }
+
+    function renderBackground() {
+      ctx.fillStyle = '#0f1a2d';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let x = 0; x < canvas.width; x += 40) {
+        for (let y = 0; y < canvas.height; y += 40) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          ctx.strokeRect(x, y, 40, 40);
+        }
+      }
+    }
+
+    function renderWalls() {
+      for (const wall of walls) {
+        drawRect(wall, '#3a5c7d');
+      }
+    }
+
+    function renderMap() {
+      renderBackground();
+      renderWalls();
+      for (const c of coins) drawCoin(c);
+      drawPlayer();
+    }
+
+    function gameLoop() {
+      movePlayer();
+      renderMap();
+      requestAnimationFrame(gameLoop);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      keys[e.key] = true;
+    });
+    document.addEventListener('keyup', (e) => {
+      keys[e.key] = false;
+    });
+
+    document.querySelectorAll('[data-move]').forEach(btn => {
+      const direction = btn.dataset.move;
+      const press = (value) => {
+        return (event) => {
+          touchMoves[direction] = value;
+          event.preventDefault();
+        };
+      };
+      btn.addEventListener('touchstart', press(true));
+      btn.addEventListener('touchend', press(false));
+      btn.addEventListener('mousedown', press(true));
+      btn.addEventListener('mouseup', press(false));
+      btn.addEventListener('mouseleave', press(false));
+    });
+
+    ui.saveProfile.addEventListener('click', saveProfile);
+    ui.verifyBtn.addEventListener('click', verifyAccount);
+
+    updateUI();
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
