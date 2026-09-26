@@ -95,6 +95,12 @@
       font-weight: 700;
     }
 
+    .currency.unlimited {
+      background: rgba(255, 215, 0, 0.2);
+      border: 2px solid var(--gold);
+      color: var(--gold);
+    }
+
     .container {
       display: flex;
       flex: 1;
@@ -149,6 +155,11 @@
       border: 3px solid var(--accent);
     }
 
+    .avatar.owner {
+      background: linear-gradient(135deg, #ffd700, #ffb800);
+      border-color: var(--gold);
+    }
+
     .player-name {
       font-size: 20px;
       font-weight: 900;
@@ -159,12 +170,41 @@
       gap: 8px;
     }
 
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #00a2e8;
+      box-shadow: 0 0 10px rgba(0, 162, 232, 0.9);
+      display: inline-block;
+      animation: pulse 1.4s infinite;
+      flex-shrink: 0;
+    }
+
+    .status-dot.owner {
+      background: var(--gold);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.9);
+    }
+
     .verified-badge {
       display: inline-flex;
       align-items: center;
       gap: 4px;
       background: var(--verified);
       color: white;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      animation: pulse 2s infinite;
+    }
+
+    .owner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--gold);
+      color: #000;
       padding: 4px 12px;
       border-radius: 999px;
       font-size: 12px;
@@ -298,6 +338,11 @@
     .shop-item-price {
       font-size: 12px;
       color: var(--gold);
+    }
+
+    .owner-shop {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
     }
 
     canvas {
@@ -445,7 +490,7 @@
       </div>
     </div>
     <div class="nav-right">
-      <div class="currency"><span>💰 </span><span id="robuxDisplay">500</span></div>
+      <div class="currency" id="robuxDisplay">💰 500</div>
       <div class="currency"><span>⭐ </span><span id="coinsDisplay">0</span></div>
     </div>
   </div>
@@ -453,10 +498,12 @@
   <div class="container">
     <div class="sidebar">
       <div class="profile-card card">
-        <div class="avatar">👤</div>
+        <div class="avatar" id="avatarElement">👤</div>
         <div class="player-name">
           <span id="playerNameDisplay">PlayerOne</span>
+          <span class="status-dot" id="statusDot" title="Online"></span>
           <span class="verified-badge" id="verificationBadge" style="display:none;">✓</span>
+          <span class="owner-badge" id="ownerBadge" style="display:none;">👑 OWNER</span>
         </div>
         <div id="roleDisplay"></div>
       </div>
@@ -514,7 +561,7 @@
 
       <div id="shopSection" class="game-section" style="display:none; padding: 20px; overflow-y: auto;">
         <h2 style="margin: 0 0 20px 0; color: var(--accent);">ROBUX SHOP</h2>
-        <div class="card">
+        <div class="card" id="robuxCard">
           <h3>Buy Robux</h3>
           <div id="robuxPackages"></div>
         </div>
@@ -618,6 +665,18 @@
       ctx.fillRect(player.x, player.y, player.w, player.h);
       ctx.fillStyle = 'rgba(255,255,255,0.3)';
       ctx.fillRect(player.x + 4, player.y + 4, player.w - 8, 6);
+      
+      if (gameState.role === 'owner') {
+        ctx.fillStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.arc(player.x + player.w / 2, player.y - 10, 5, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = '#00a2e8';
+        ctx.beginPath();
+        ctx.arc(player.x + player.w / 2, player.y - 10, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     function movePlayer(deltaTime) {
@@ -689,13 +748,36 @@
 
     function updateUI() {
       document.getElementById('playerNameDisplay').textContent = gameState.playerName;
-      document.getElementById('robuxDisplay').textContent = gameState.robux;
+      const statusDot = document.getElementById('statusDot');
+      statusDot.classList.toggle('owner', gameState.role === 'owner');
+      
+      const robuxDisplay = document.getElementById('robuxDisplay');
+      if (gameState.role === 'owner') {
+        robuxDisplay.className = 'currency unlimited';
+        robuxDisplay.innerHTML = '💰 <span id="robuxDisplayValue">∞</span>';
+      } else {
+        robuxDisplay.className = 'currency';
+        robuxDisplay.innerHTML = '💰 <span id="robuxDisplayValue">' + gameState.robux + '</span>';
+      }
+      
       document.getElementById('coinsDisplay').textContent = gameState.coins;
       document.getElementById('statsCoinsDisplay').textContent = gameState.coins;
       document.getElementById('levelDisplay').textContent = gameState.level;
 
       const badge = document.getElementById('verificationBadge');
-      badge.style.display = gameState.verified ? 'inline-flex' : 'none';
+      const ownerBadge = document.getElementById('ownerBadge');
+      
+      badge.style.display = gameState.verified && gameState.role !== 'owner' ? 'inline-flex' : 'none';
+      ownerBadge.style.display = gameState.role === 'owner' ? 'inline-flex' : 'none';
+
+      const avatar = document.getElementById('avatarElement');
+      if (gameState.role === 'owner') {
+        avatar.textContent = '👑';
+        avatar.classList.add('owner');
+      } else {
+        avatar.textContent = '👤';
+        avatar.classList.remove('owner');
+      }
 
       const roleDisplay = document.getElementById('roleDisplay');
       const roleClass = gameState.role === 'owner' ? 'owner' : '';
@@ -704,7 +786,7 @@
       document.getElementById('profileUsername').textContent = gameState.playerName;
       document.getElementById('profileRole').textContent = gameState.role;
       document.getElementById('profileVerified').textContent = gameState.verified ? '✅ Yes' : '❌ No';
-      document.getElementById('profileRobux').textContent = gameState.robux;
+      document.getElementById('profileRobux').textContent = gameState.role === 'owner' ? '∞' : gameState.robux;
       document.getElementById('profileCoins').textContent = gameState.coins;
 
       renderShop();
@@ -713,70 +795,104 @@
     function renderShop() {
       const list = document.getElementById('itemShopList');
       list.innerHTML = '';
+      
       shopItems.forEach(item => {
         const div = document.createElement('div');
-        div.className = 'shop-item';
         const owned = gameState.inventory.includes(item.id);
+        
+        if (gameState.role === 'owner') {
+          div.className = 'shop-item owner-shop';
+        } else {
+          div.className = 'shop-item';
+        }
+        
+        const buttonText = gameState.role === 'owner' ? 'Owned' : (owned ? 'Owned' : 'Buy');
+        const isDisabled = gameState.role === 'owner' || owned;
+        
         div.innerHTML = `
           <div>
             <div class="shop-item-name">${item.icon} ${item.name}</div>
             <div class="shop-item-price">R$ ${item.cost}</div>
           </div>
-          <button class="btn-small" onclick="buyItem('${item.id}', ${item.cost})" ${owned ? 'disabled' : ''}>${owned ? 'Owned' : 'Buy'}</button>
+          <button class="btn-small" onclick="buyItem('${item.id}', ${item.cost})" ${isDisabled ? 'disabled' : ''}>${buttonText}</button>
         `;
         list.appendChild(div);
       });
+
+      if (gameState.role === 'owner') {
+        gameState.inventory = shopItems.map(item => item.id);
+      }
     }
 
     function renderRobuxPackages() {
       const div = document.getElementById('robuxPackages');
-      div.innerHTML = '';
-      robuxPackages.forEach(pkg => {
-        const btn = document.createElement('button');
-        btn.innerHTML = `R$ ${pkg.amount.toLocaleString()} - ${pkg.price}`;
-        btn.onclick = () => {
-          gameState.robux += pkg.amount;
-          saveState();
-          updateUI();
-          showNotification(`Purchased R$ ${pkg.amount.toLocaleString()}!`);
-        };
-        div.appendChild(btn);
-      });
+      const card = document.getElementById('robuxCard');
+      
+      if (gameState.role === 'owner') {
+        div.innerHTML = '<p style="color: var(--gold); font-weight: 700;">✅ المالك يملك روبوكس غير محدود!</p>';
+        card.style.display = 'block';
+      } else {
+        div.innerHTML = '';
+        robuxPackages.forEach(pkg => {
+          const btn = document.createElement('button');
+          btn.innerHTML = `R$ ${pkg.amount.toLocaleString()} - ${pkg.price}`;
+          btn.onclick = () => {
+            gameState.robux += pkg.amount;
+            saveState();
+            updateUI();
+            showNotification(`تم شراء R$ ${pkg.amount.toLocaleString()}!`);
+          };
+          div.appendChild(btn);
+        });
+      }
     }
 
     function buyItem(itemId, cost) {
+      if (gameState.role === 'owner') {
+        showNotification('✅ أنت المالك - تملك جميع الأشياء!');
+        return;
+      }
+
       if (gameState.inventory.includes(itemId)) {
-        showNotification('Already owned');
+        showNotification('تملك هذا الشيء بالفعل');
         return;
       }
+
       if (gameState.robux < cost) {
-        showNotification('Not enough Robux');
+        showNotification('روبوكس غير كافي');
         return;
       }
+
       gameState.robux -= cost;
       gameState.inventory.push(itemId);
       saveState();
       updateUI();
-      showNotification('Item purchased!');
+      showNotification('✅ تم شراء الشيء!');
     }
 
     function saveProfile() {
       gameState.playerName = document.getElementById('playerName').value || 'PlayerOne';
       gameState.role = document.getElementById('roleSelect').value;
+      
+      if (gameState.role === 'owner') {
+        gameState.robux = 999999999;
+      }
+      
       saveState();
       updateUI();
-      showNotification('Profile saved!');
+      renderRobuxPackages();
+      showNotification('✅ تم حفظ الملف الشخصي!');
     }
 
     function verifyAccount() {
       if (!['creator', 'developer', 'owner'].includes(gameState.role)) {
-        showNotification('Only Creator, Developer, or Owner can verify');
+        showNotification('فقط المبدعون والمطورون والمالك يمكنهم التحقق');
         return;
       }
       gameState.verified = true;
       saveState();
       updateUI();
-      showNotification('✅ Account verified!');
+      showNotification('✅ تم التحقق من الحساب!');
     }
 
     function showSection(section) {
@@ -808,7 +924,6 @@
       }
     }
 
-    // ===== CHAT & MIC =====
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const micBtn = document.getElementById('micBtn');
@@ -836,7 +951,6 @@
       if (e.key === 'Enter') sendChat();
     });
 
-    // MIC INPUT
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = null;
     let micListening = false;
@@ -870,13 +984,12 @@
 
     micBtn.addEventListener('click', () => {
       if (!recognition) {
-        showNotification('Microphone not supported');
+        showNotification('المايكروفون غير مدعوم');
         return;
       }
       micListening ? recognition.stop() : recognition.start();
     });
 
-    // INIT
     document.addEventListener('keydown', (e) => { keys[e.key] = true; });
     document.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
@@ -889,8 +1002,8 @@
       btn.addEventListener('mouseleave', () => { touchMoves[dir] = false; });
     });
 
-    addChatMessage('Welcome to BuildVerse 2! 🎮', 'bot');
-    addChatMessage('Collect coins, build, and chat!', 'bot');
+    addChatMessage('مرحبا بك في BuildVerse 2! 🎮', 'bot');
+    addChatMessage('اجمع العملات وابني واستمتع!', 'bot');
 
     loadState();
     document.getElementById('playerName').value = gameState.playerName;
